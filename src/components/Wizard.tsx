@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { WizardProps, Question, QuestionType } from '@/types/wizard';
 import { Button } from '@/components/ui/button';
@@ -115,34 +116,42 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
   }, []);
   
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-2xl mx-auto p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
       {/* Progress bar */}
-      <div className="w-full h-2 bg-gray-200 rounded-full mb-6">
+      <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-8 overflow-hidden">
         <div 
-          className="h-full bg-blue-500 rounded-full transition-all duration-300 ease-in-out"
+          className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-500 ease-in-out"
           style={{ width: `${progress}%` }}
         />
       </div>
       
       {/* Step indicator */}
-      <div className="text-sm text-gray-500 mb-6">
-        Step {currentStep + 1} of {questions.length}
+      <div className="flex justify-between items-center mb-10">
+        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          Question {currentStep + 1} of {questions.length}
+        </div>
+        
+        <div className="text-xs font-medium px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">
+          {Math.round(progress)}% Complete
+        </div>
       </div>
       
-      {/* Question */}
-      <QuestionComponent 
-        question={currentQuestion}
-        value={currentAnswer}
-        onChange={handleAnswerChange}
-      />
+      {/* Question content area with animation */}
+      <div className="min-h-[280px] flex flex-col">
+        <QuestionComponent 
+          question={currentQuestion}
+          value={currentAnswer}
+          onChange={handleAnswerChange}
+        />
+      </div>
       
       {/* Navigation buttons */}
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-end mt-10 gap-3">
         <Button
           variant="outline"
           onClick={handleBack}
           disabled={isFirstStep}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 transition-all hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           <ArrowLeft className="h-4 w-4" />
           Back
@@ -151,7 +160,11 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
         <Button 
           onClick={handleNext}
           disabled={!isCurrentQuestionValid()}
-          className="flex items-center gap-2"
+          className={`flex items-center gap-2 transition-all ${
+            !isCurrentQuestionValid() 
+              ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white'
+          }`}
         >
           {isLastStep ? (
             <>

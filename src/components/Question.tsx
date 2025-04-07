@@ -17,21 +17,25 @@ const Question: React.FC<QuestionProps> = ({ question, value, onChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold">{question.title}</h2>
-        <p className="text-gray-600 mt-1">{question.text}</p>
+    <div className="space-y-6 animate-[fade-in_0.4s_ease-out]">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{question.title}</h2>
+        <p className="text-gray-600 dark:text-gray-300">{question.text}</p>
       </div>
       
-      <div className="space-y-2">
-        <Label htmlFor={question.id}>{question.title}</Label>
+      <div className="space-y-3 pt-2">
+        <Label htmlFor={question.id} className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {question.title}
+        </Label>
+        
         {question.inputType === 'textarea' ? (
           <Textarea 
             id={question.id}
             value={value}
             onChange={handleChange}
             placeholder={question.placeholder}
-            className="w-full"
+            className="w-full transition-all border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            rows={4}
           />
         ) : (
           <Input
@@ -40,7 +44,7 @@ const Question: React.FC<QuestionProps> = ({ question, value, onChange }) => {
             value={value}
             onChange={handleChange}
             placeholder={question.placeholder}
-            className="w-full"
+            className="w-full transition-all border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
           />
         )}
       </div>
