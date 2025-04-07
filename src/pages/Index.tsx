@@ -1,52 +1,11 @@
 
 import React from 'react';
 import Wizard from '@/components/Wizard';
-import { QuestionType } from '@/types/wizard';
+import { getQuestions } from '@/services/questionService';
 import { toast } from 'sonner';
 
 const Index = () => {
-  const questions: QuestionType[] = [
-    {
-      id: 'name',
-      title: 'Your Name',
-      text: 'Please enter your full name',
-      inputType: 'text',
-      placeholder: 'John Doe',
-      validation: {
-        type: 'nonEmpty'
-      }
-    },
-    {
-      id: 'email',
-      title: 'Email Address',
-      text: 'We need your email to contact you',
-      inputType: 'email',
-      placeholder: 'john@example.com',
-      validation: {
-        type: 'nonEmpty'
-      }
-    },
-    {
-      id: 'age',
-      title: 'Your Age',
-      text: 'How old are you?',
-      inputType: 'number',
-      placeholder: '25',
-      // Example: Skip the age question if the person hasn't provided their name
-      skipCondition: (answers) => !answers.name || answers.name.trim() === ''
-    },
-    {
-      id: 'feedback',
-      title: 'Feedback',
-      text: 'Please share any additional feedback with us',
-      inputType: 'textarea',
-      placeholder: 'Type your feedback here...',
-      validation: {
-        type: 'minLength',
-        value: 10
-      }
-    }
-  ];
+  const questions = getQuestions();
 
   const handleComplete = (answers: Record<string, string>) => {
     console.log('Completed with answers:', answers);
