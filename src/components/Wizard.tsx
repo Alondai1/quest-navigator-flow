@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { WizardProps } from '@/types/wizard';
+import { WizardProps, Question, QuestionType } from '@/types/wizard';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import Question from './Question';
+import QuestionComponent from './Question';
 
 const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -44,6 +44,28 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
   const currentQuestion = questions[currentStep];
   const currentAnswer = answers[currentQuestion.id] || '';
   
+  const isCurrentQuestionValid = (): boolean => {
+    // Create a Question object from QuestionType
+    const question: Question = {
+      title: currentQuestion.title,
+      text: currentQuestion.text,
+      inputField: currentQuestion.inputType
+    };
+    
+    // If there's no validation rule, consider it valid
+    if (!question.validation) return true;
+    
+    // Validate based on validation rules
+    switch (question.validation.type) {
+      case 'nonEmpty':
+        return currentAnswer.trim() !== '';
+      case 'minLength':
+        return currentAnswer.length >= (question.validation.value || 0);
+      default:
+        return true;
+    }
+  };
+  
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       {/* Progress bar */}
@@ -60,7 +82,7 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
       </div>
       
       {/* Question */}
-      <Question 
+      <QuestionComponent 
         question={currentQuestion}
         value={currentAnswer}
         onChange={handleAnswerChange}
@@ -80,6 +102,7 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
         
         <Button 
           onClick={handleNext}
+          disabled={!isCurrentQuestionValid()}
           className="flex items-center gap-2"
         >
           {isLastStep ? (

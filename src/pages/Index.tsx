@@ -11,14 +11,20 @@ const Index = () => {
       title: 'Your Name',
       text: 'Please enter your full name',
       inputType: 'text',
-      placeholder: 'John Doe'
+      placeholder: 'John Doe',
+      validation: {
+        type: 'nonEmpty'
+      }
     },
     {
       id: 'email',
       title: 'Email Address',
       text: 'We need your email to contact you',
       inputType: 'email',
-      placeholder: 'john@example.com'
+      placeholder: 'john@example.com',
+      validation: {
+        type: 'nonEmpty'
+      }
     },
     {
       id: 'age',
@@ -32,7 +38,11 @@ const Index = () => {
       title: 'Feedback',
       text: 'Please share any additional feedback with us',
       inputType: 'textarea',
-      placeholder: 'Type your feedback here...'
+      placeholder: 'Type your feedback here...',
+      validation: {
+        type: 'minLength',
+        value: 10
+      }
     }
   ];
 

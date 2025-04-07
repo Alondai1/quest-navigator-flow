@@ -5,6 +5,10 @@ export interface QuestionType {
   text: string;
   inputType: 'text' | 'number' | 'email' | 'textarea';
   placeholder?: string;
+  validation?: {
+    type: 'nonEmpty' | 'minLength';
+    value?: number;
+  };
 }
 
 export interface Question {
