@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import Wizard from './Wizard';
 import { QuestionType } from '@/types/wizard';
 
