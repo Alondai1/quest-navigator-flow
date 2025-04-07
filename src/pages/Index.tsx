@@ -31,7 +31,9 @@ const Index = () => {
       title: 'Your Age',
       text: 'How old are you?',
       inputType: 'number',
-      placeholder: '25'
+      placeholder: '25',
+      // Example: Skip the age question if the person hasn't provided their name
+      skipCondition: (answers) => !answers.name || answers.name.trim() === ''
     },
     {
       id: 'feedback',

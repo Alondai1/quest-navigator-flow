@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { WizardProps, Question, QuestionType } from '@/types/wizard';
 import { Button } from '@/components/ui/button';
@@ -18,18 +17,60 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
     setProgress((currentStep / (questions.length - 1)) * 100);
   }, [currentStep, questions.length]);
   
+  const shouldSkipQuestion = (questionIndex: number): boolean => {
+    if (questionIndex >= questions.length) return false;
+    
+    const questionToCheck = questions[questionIndex];
+    // Convert QuestionType to Question for skipCondition
+    const question: Question = {
+      title: questionToCheck.title,
+      text: questionToCheck.text,
+      inputField: questionToCheck.inputType,
+      validation: questionToCheck.validation,
+      skipCondition: (questionToCheck as any).skipCondition
+    };
+    
+    return question.skipCondition ? question.skipCondition(answers) : false;
+  };
+  
+  const findNextStep = (currentIndex: number): number => {
+    let nextIndex = currentIndex + 1;
+    
+    // Keep moving forward until we find a question that shouldn't be skipped
+    // or until we reach the end
+    while (nextIndex < questions.length && shouldSkipQuestion(nextIndex)) {
+      nextIndex++;
+    }
+    
+    return nextIndex;
+  };
+  
+  const findPreviousStep = (currentIndex: number): number => {
+    let prevIndex = currentIndex - 1;
+    
+    // Keep moving backward until we find a question that shouldn't be skipped
+    // or until we reach the beginning
+    while (prevIndex >= 0 && shouldSkipQuestion(prevIndex)) {
+      prevIndex--;
+    }
+    
+    return Math.max(0, prevIndex);
+  };
+  
   const handleNext = () => {
     if (isLastStep) {
       onComplete?.(answers);
       return;
     }
     
-    setCurrentStep((prev) => prev + 1);
+    const nextStep = findNextStep(currentStep);
+    setCurrentStep(nextStep);
   };
   
   const handleBack = () => {
     if (!isFirstStep) {
-      setCurrentStep((prev) => prev - 1);
+      const prevStep = findPreviousStep(currentStep);
+      setCurrentStep(prevStep);
     }
   };
   
@@ -65,6 +106,13 @@ const Wizard: React.FC<WizardProps> = ({ questions, onComplete }) => {
         return true;
     }
   };
+  
+  useEffect(() => {
+    if (shouldSkipQuestion(currentStep)) {
+      const nextStep = findNextStep(currentStep);
+      setCurrentStep(nextStep);
+    }
+  }, []);
   
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">

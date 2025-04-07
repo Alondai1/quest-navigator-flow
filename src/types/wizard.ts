@@ -9,6 +9,7 @@ export interface QuestionType {
     type: 'nonEmpty' | 'minLength';
     value?: number;
   };
+  skipCondition?: (answers: Record<string, string>) => boolean;
 }
 
 export interface Question {
